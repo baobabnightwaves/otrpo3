@@ -1,0 +1,124 @@
+@use "sass:math";
+@use "sass:color";
+@import "colors";
+
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,  
+  xl: 1200px,
+  xxl: 1600px,
+  xxxl: 2000px,
+  xxxxl: 2500px
+) !default;
+
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: 1140px,
+  xxl: 1320px,
+  xxxl: 1900px,
+  xxxxl: 2400px
+);
+
+@import "~bootstrap/scss/bootstrap";
+
+@mixin card-colors($start-color, $steps) {
+  @for $i from 1 through $steps {
+    $percentage: math.div($i - 1, $steps - 1) * 15%;
+    .row > div:nth-child(#{$i}) .custom-card,
+    .row > div:nth-child(#{$steps}n + #{$i}) .custom-card {
+      background-color: color.scale($start-color, $lightness: -$percentage);
+    }
+  }
+}
+
+@include card-colors($left-color, $steps);
+
+body {
+  background-color: $body-color;
+  font-family: "B612", sans-serif;
+}
+
+.navbar {
+  background: $header-color !important;
+
+  .btn {
+    border-radius: 0 !important;
+  }
+}
+
+.container {
+  .custom-card {
+    border-radius: 0 !important;
+    border: 1px solid $border-color;
+
+    .btn {
+      border-radius: 0 !important;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+      &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      }
+    }
+
+    img {
+      object-fit: contain;
+      height: 300px;
+    }
+
+    span {
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+  }
+}
+
+footer { 
+  height: 200px; 
+  background: $footer-color !important; 
+  border: 2px solid $border-color; 
+  display: flex; 
+  align-items: center; 
+  
+  .container {
+    margin: 0 auto;
+    
+    h4 { 
+      color: $font-color;
+    } 
+    
+    img { 
+      height: 50px; 
+    } 
+  } 
+}
+
+.modal-dialog, .modal-content, .btn {
+  border-radius: 0 !important;
+}
+
+.modal-body {
+  img {
+    height: 300px;
+  }
+}
+
+.custom-card, .modal-content {
+    color: $font-color;
+}
+
+.popover {
+  --bs-popover-bg: #ffffff !important;
+  --bs-popover-color: #000000 !important;
+  --bs-popover-header-bg: #ffffff !important;
+  --bs-popover-header-color: #000000 !important;
+  border: 1px solid #ccc;
+}
+
+.popover-body {
+  color: #000000 !important;
+}
