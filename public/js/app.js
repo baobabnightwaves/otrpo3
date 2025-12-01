@@ -30898,59 +30898,62 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 document.addEventListener('DOMContentLoaded', function () {
+  // Инициализируем все модальные окна с отключенным backdrop
+  initModals();
+  initModalNavigation();
+  initToast();
+  initPopovers();
+});
+function initModals() {
+  // Инициализируем все модальные окна с отключенным backdrop
+  document.querySelectorAll('.modal').forEach(function (modal) {
+    new bootstrap__WEBPACK_IMPORTED_MODULE_0__.Modal(modal, {
+      backdrop: false,
+      // Полностью отключаем backdrop
+      keyboard: true // Но оставляем закрытие по ESC
+    });
+  });
+}
+function initModalNavigation() {
   var modals = Array.from(document.querySelectorAll('.modal'));
+  if (modals.length === 0) return;
   var modalByIndex = {};
   modals.forEach(function (el) {
     var idx = parseInt(el.getAttribute('data-index'), 10);
-    if (!Number.isNaN(idx)) modalByIndex[idx] = el;
+    if (!Number.isNaN(idx)) {
+      modalByIndex[idx] = el;
+    }
   });
   var indices = Object.keys(modalByIndex).map(Number).sort(function (a, b) {
     return a - b;
   });
-  var currentIndex = null;
-  var switching = false;
-  var backdrop = document.createElement('div');
-  backdrop.className = 'modal-backdrop show';
-  backdrop.style.display = 'none';
-  document.body.appendChild(backdrop);
-  var modalInstances = {};
-  modals.forEach(function (el) {
-    modalInstances[el.id] = new bootstrap__WEBPACK_IMPORTED_MODULE_0__.Modal(el, {
-      backdrop: false
-    });
-  });
-  modals.forEach(function (modal) {
-    modal.addEventListener('shown.bs.modal', function () {
-      backdrop.style.display = 'block';
-      currentIndex = parseInt(modal.getAttribute('data-index'), 10);
-      switching = false;
-    });
-    modal.addEventListener('hidden.bs.modal', function () {
-      if (!switching) {
-        currentIndex = null;
-        backdrop.style.display = 'none';
-      }
-    });
-  });
   document.addEventListener('keydown', function (e) {
-    if (currentIndex === null || switching) return;
     if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    var openModal = document.querySelector('.modal.show');
+    if (!openModal) return;
+    e.preventDefault();
+    var currentIndex = parseInt(openModal.getAttribute('data-index'), 10);
+    if (isNaN(currentIndex)) return;
     var pos = indices.indexOf(currentIndex);
     if (pos === -1) return;
     var nextPos = e.key === 'ArrowRight' ? (pos + 1) % indices.length : (pos - 1 + indices.length) % indices.length;
     var nextIndex = indices[nextPos];
-    var currentEl = modalByIndex[currentIndex];
     var nextEl = modalByIndex[nextIndex];
-    if (!currentEl || !nextEl) return;
-    switching = true;
-    var currentModal = modalInstances[currentEl.id];
-    var nextModal = modalInstances[nextEl.id];
-    currentEl.addEventListener('hidden.bs.modal', function handler() {
-      currentEl.removeEventListener('hidden.bs.modal', handler);
-      nextModal.show();
-    });
-    currentModal.hide();
+    if (!nextEl) return;
+    var currentModalInstance = bootstrap__WEBPACK_IMPORTED_MODULE_0__.Modal.getInstance(openModal);
+    if (currentModalInstance) {
+      currentModalInstance.hide();
+      openModal.addEventListener('hidden.bs.modal', function handler() {
+        openModal.removeEventListener('hidden.bs.modal', handler);
+        var nextModalInstance = new bootstrap__WEBPACK_IMPORTED_MODULE_0__.Modal(nextEl, {
+          backdrop: false
+        });
+        nextModalInstance.show();
+      });
+    }
   });
+}
+function initToast() {
   var loadButton = document.querySelector('.btn-light');
   if (loadButton) {
     loadButton.addEventListener('click', function () {
@@ -30961,11 +30964,13 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     });
   }
+}
+function initPopovers() {
   var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
   var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
     return new bootstrap__WEBPACK_IMPORTED_MODULE_0__.Popover(popoverTriggerEl);
   });
-});
+}
 
 /***/ }),
 

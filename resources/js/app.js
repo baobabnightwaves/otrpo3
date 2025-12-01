@@ -3,45 +3,50 @@ require('./bootstrap');
 import * as bootstrap from 'bootstrap';
 
 document.addEventListener('DOMContentLoaded', function() {
+    // Инициализируем все модальные окна с отключенным backdrop
+    initModals();
+    initModalNavigation();
+    initToast();
+    initPopovers();
+});
+
+function initModals() {
+    // Инициализируем все модальные окна с отключенным backdrop
+    document.querySelectorAll('.modal').forEach(modal => {
+        new bootstrap.Modal(modal, {
+            backdrop: false, // Полностью отключаем backdrop
+            keyboard: true   // Но оставляем закрытие по ESC
+        });
+    });
+}
+
+function initModalNavigation() {
     const modals = Array.from(document.querySelectorAll('.modal'));
+    
+    if (modals.length === 0) return;
+
     const modalByIndex = {};
     modals.forEach(el => {
         const idx = parseInt(el.getAttribute('data-index'), 10);
-        if (!Number.isNaN(idx)) 
+        if (!Number.isNaN(idx)) {
             modalByIndex[idx] = el;
+        }
     });
 
     const indices = Object.keys(modalByIndex)
         .map(Number)
         .sort((a, b) => a - b);
 
-    let currentIndex = null;
-    let switching = false;
-    const backdrop = document.createElement('div');
-    backdrop.className = 'modal-backdrop show';
-    backdrop.style.display = 'none';
-    document.body.appendChild(backdrop);
-    const modalInstances = {};
-    modals.forEach(el => {
-        modalInstances[el.id] = new bootstrap.Modal(el, { backdrop: false });
-    });
-    modals.forEach(modal => {
-        modal.addEventListener('shown.bs.modal', () => {
-            backdrop.style.display = 'block';
-            currentIndex = parseInt(modal.getAttribute('data-index'), 10);
-            switching = false;
-        });
-
-        modal.addEventListener('hidden.bs.modal', () => {
-            if (!switching) {
-                currentIndex = null;
-                backdrop.style.display = 'none';
-            }
-        });
-    });
     document.addEventListener('keydown', e => {
-        if (currentIndex === null || switching) return;
         if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+
+        const openModal = document.querySelector('.modal.show');
+        if (!openModal) return;
+
+        e.preventDefault();
+
+        const currentIndex = parseInt(openModal.getAttribute('data-index'), 10);
+        if (isNaN(currentIndex)) return;
 
         const pos = indices.indexOf(currentIndex);
         if (pos === -1) return;
@@ -51,23 +56,26 @@ document.addEventListener('DOMContentLoaded', function() {
             : (pos - 1 + indices.length) % indices.length;
 
         const nextIndex = indices[nextPos];
-        const currentEl = modalByIndex[currentIndex];
         const nextEl = modalByIndex[nextIndex];
-        if (!currentEl || !nextEl) return;
 
-        switching = true;
+        if (!nextEl) return;
 
-        const currentModal = modalInstances[currentEl.id];
-        const nextModal = modalInstances[nextEl.id];
+        const currentModalInstance = bootstrap.Modal.getInstance(openModal);
+        if (currentModalInstance) {
+            currentModalInstance.hide();
 
-        currentEl.addEventListener('hidden.bs.modal', function handler() {
-            currentEl.removeEventListener('hidden.bs.modal', handler);
-            nextModal.show();
-        });
-
-        currentModal.hide();
+            openModal.addEventListener('hidden.bs.modal', function handler() {
+                openModal.removeEventListener('hidden.bs.modal', handler);
+                const nextModalInstance = new bootstrap.Modal(nextEl, { 
+                    backdrop: false
+                });
+                nextModalInstance.show();
+            });
+        }
     });
+}
 
+function initToast() {
     const loadButton = document.querySelector('.btn-light');
     if (loadButton) {
         loadButton.addEventListener('click', () => {
@@ -78,9 +86,11 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+}
 
-    var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
-    var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+function initPopovers() {
+    const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+    const popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
         return new bootstrap.Popover(popoverTriggerEl);
     });
-});
+}

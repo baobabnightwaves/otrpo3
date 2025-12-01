@@ -1,13 +1,20 @@
 <nav class="navbar navbar-expand-lg bg-dark text-white py-3">
     <div class="container d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center">
-            <img src="{{ asset('portugal_flag.png') }}" alt="Флаг Португалии" height="60" class="me-3">
-            <h1 class="h3 mb-0 text-white">Главные города Португалии</h1>
+            <a href="{{ route('home') }}" class="text-decoration-none text-white">
+                <img src="{{ asset('/storage/portugal_flag.png') }}" alt="Флаг Португалии" height="60" class="me-3">
+            </a>
+            <a href="{{ route('home') }}" class="text-decoration-none text-white">
+                <h1 class="h3 mb-0">Главные города Португалии</h1>
+            </a>
         </div>
-        <button class="btn btn-light">Загрузить</button>
+        <div>
+            <a href="{{ route('cities.index') }}" class="btn btn-light me-2">
+                <i class="fas fa-list me-1"></i>Управление городами
+            </a>
+            <a href="{{ route('cities.create') }}" class="btn btn-primary">
+                <i class="fas fa-plus me-1"></i>Добавить город
+            </a>
+        </div>
     </div>
 </nav>
-
-<header class="container text-center my-5">
-    <h1 class="display-6 fw-bold text-dark text-start">Города Португалии</h1>
-</header>

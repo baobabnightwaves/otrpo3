@@ -1,0 +1,19 @@
+@extends('web')
+@section('content')
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card text-dark">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="fas fa-plus me-2"></i>Добавить новый город</h4>
+                </div>
+                <div class="card-body">
+                    <form action="{{ route('cities.store') }}" method="POST" enctype="multipart/form-data">
+                        @include('cities.form')
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection

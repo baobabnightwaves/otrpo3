@@ -5,7 +5,7 @@
             <i class="fa-solid fa-rotate fa-spin me-2"></i>
             Функция загрузки временно недоступна.
         </div>
-        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Закрыть"></button>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Закрыть"></button>
         </div>
     </div>
 </div>

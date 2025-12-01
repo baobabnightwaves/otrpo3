@@ -8,7 +8,7 @@
     <link href="{{ mix('css/app.css') }}" rel="stylesheet">
 </head>
 
-<body style="font-family: 'B612', sans-serif;">
+<body>
     @include('partials.header')
     <main>
         @yield('content')

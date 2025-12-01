@@ -9,9 +9,8 @@ $grid-breakpoints: (
   lg: 992px,  
   xl: 1200px,
   xxl: 1600px,
-  xxxl: 2000px,
-  xxxxl: 2500px
-) !default;
+  xxxl: 2000px
+);
 
 $container-max-widths: (
   sm: 540px,
@@ -19,8 +18,7 @@ $container-max-widths: (
   lg: 960px,
   xl: 1140px,
   xxl: 1320px,
-  xxxl: 1900px,
-  xxxxl: 2400px
+  xxxl: 1900px
 );
 
 @import "~bootstrap/scss/bootstrap";
@@ -44,19 +42,15 @@ body {
 
 .navbar {
   background: $header-color !important;
-
-  .btn {
-    border-radius: 0 !important;
-  }
 }
+
+.custom-cardб, .card, .img-fluid, .btn, .alert, .breadcrumb, .card-header, .form-control, .btn, .img-thumbnail, .modal-dialog, .modal-content { border-radius: 0 !important; }
 
 .container {
   .custom-card {
-    border-radius: 0 !important;
     border: 1px solid $border-color;
 
     .btn {
-      border-radius: 0 !important;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
 
       &:hover {
@@ -97,9 +91,6 @@ footer {
   } 
 }
 
-.modal-dialog, .modal-content, .btn {
-  border-radius: 0 !important;
-}
 
 .modal-body {
   img {
