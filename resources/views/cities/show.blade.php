@@ -8,7 +8,7 @@
                 <div class="card-header bg-primary text-white">
                     <h1 class="h3 mb-0">{{ $city->name }}</h1>
                 </div>
-                <div class="card-body text-dark">
+                <div class="card-body text-dark" style="background: #f5e5b8;">
                     <div class="row mb-4">
                         <div class="col-md-6 text-center">
                             <div class="position-relative">
@@ -55,7 +55,7 @@
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <div class="card text-dark">
+                            <div class="card text-dark" style="background: #e7d090ff">
                                 <div class="card-body">
                                     <p><strong>Дата создания:</strong> {{ $city->created_at->format('d.m.Y H:i') }}</p>
                                     <p><strong>Последнее обновление:</strong> {{ $city->updated_at->format('d.m.Y H:i') }}</p>  

@@ -26,7 +26,6 @@ class CityController extends Controller
             'name' => 'required|string|max:255',
             'coat_of_arms_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:5120', // 5MB
             'card_text' => 'required|string|max:500',
-            'modal_id' => 'required|string|unique:cities|max:100',
             'modal_title' => 'required|string|max:255',
             'modal_text' => 'required|string',
             'city_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
@@ -86,7 +85,6 @@ class CityController extends Controller
             'name' => 'required|string|max:255',
             'coat_of_arms_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
             'card_text' => 'required|string|max:500',
-            'modal_id' => 'required|string|max:100|unique:cities,modal_id,' . $city->id,
             'modal_title' => 'required|string|max:255',
             'modal_text' => 'required|string',
             'city_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
@@ -140,13 +138,6 @@ class CityController extends Controller
 
     public function destroy(City $city)
     {
-        if ($city->coat_of_arms_image && Storage::disk('public')->exists($city->coat_of_arms_image)) {
-            Storage::disk('public')->delete($city->coat_of_arms_image);
-        }
-        if ($city->city_image && Storage::disk('public')->exists($city->city_image)) {
-            Storage::disk('public')->delete($city->city_image);
-        }
-
         $city->delete();
 
         return redirect()->route('cities.index')
