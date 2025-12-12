@@ -3,7 +3,6 @@ require('./bootstrap');
 import * as bootstrap from 'bootstrap';
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Инициализируем все модальные окна с отключенным backdrop
     initModals();
     initModalNavigation();
     initToast();
@@ -11,11 +10,10 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function initModals() {
-    // Инициализируем все модальные окна с отключенным backdrop
     document.querySelectorAll('.modal').forEach(modal => {
         new bootstrap.Modal(modal, {
-            backdrop: false, // Полностью отключаем backdrop
-            keyboard: true   // Но оставляем закрытие по ESC
+            backdrop: false,
+            keyboard: true
         });
     });
 }

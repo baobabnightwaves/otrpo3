@@ -33,15 +33,10 @@ class CityController extends Controller
             'interesting_fact' => 'required|string|max:1000',
         ]);
 
-        // Обработка герба
         if ($request->hasFile('coat_of_arms_image')) {
             $image = $request->file('coat_of_arms_image');
             $filename = 'coat_of_arms_' . time() . '.' . $image->getClientOriginalExtension();
-            
-            // Сохраняем с помощью Intervention Image
             $imagePath = public_path('storage/' . $filename);
-            
-            // Создаем директорию, если она не существует
             if (!file_exists(public_path('storage/'))) {
                 mkdir(public_path('storage/'), 0755, true);
             }
@@ -52,12 +47,8 @@ class CityController extends Controller
                     $constraint->upsize();
                 })
                 ->save($imagePath);
-            
-            // Сохраняем относительный путь
             $validated['coat_of_arms_image'] = '/' . $filename;
         }
-
-        // Обработка изображения города
         if ($request->hasFile('city_image')) {
             $image = $request->file('city_image');
             $filename = 'city_' . time() . '.' . $image->getClientOriginalExtension();
@@ -103,9 +94,7 @@ class CityController extends Controller
             'interesting_fact' => 'required|string|max:1000',
         ]);
 
-        // Обработка герба
         if ($request->hasFile('coat_of_arms_image')) {
-            // Удаляем старое изображение
             if ($city->coat_of_arms_image && file_exists(public_path('storage/' . $city->coat_of_arms_image))) {
                 unlink(public_path('storage/' . $city->coat_of_arms_image));
             }
@@ -124,13 +113,10 @@ class CityController extends Controller
             
             $validated['coat_of_arms_image'] = '/' . $filename;
         } else {
-            // Сохраняем старое изображение, если новое не загружено
             $validated['coat_of_arms_image'] = $city->coat_of_arms_image;
         }
 
-        // Обработка изображения города
         if ($request->hasFile('city_image')) {
-            // Удаляем старое изображение
             if ($city->city_image && file_exists(public_path('storage/' . $city->city_image))) {
                 unlink(public_path('storage/' . $city->city_image));
             }
@@ -149,7 +135,6 @@ class CityController extends Controller
             
             $validated['city_image'] = '/' . $filename;
         } else {
-            // Сохраняем старое изображение, если новое не загружено
             $validated['city_image'] = $city->city_image;
         }
 

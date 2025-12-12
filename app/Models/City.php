@@ -22,11 +22,22 @@ class City extends Model
         'modal_text',
         'city_image',
         'wiki_url',
-        'interesting_fact'
+        'interesting_fact',
+        'user_id'
     ];
 
     protected $dates = ['deleted_at'];
+    
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+    
     public function setNameAttribute($value)
     {
         $this->attributes['name'] = trim(ucfirst($value));
