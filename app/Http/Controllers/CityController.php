@@ -24,7 +24,7 @@ class CityController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'coat_of_arms_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:5120', // 5MB
+            'coat_of_arms_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
             'card_text' => 'required|string|max:500',
             'modal_title' => 'required|string|max:255',
             'modal_text' => 'required|string',
@@ -33,34 +33,45 @@ class CityController extends Controller
             'interesting_fact' => 'required|string|max:1000',
         ]);
 
+        // Обработка герба
         if ($request->hasFile('coat_of_arms_image')) {
             $image = $request->file('coat_of_arms_image');
             $filename = 'coat_of_arms_' . time() . '.' . $image->getClientOriginalExtension();
             
-            $imagePath = storage_path('app/public/' . $filename);
-            Image::make($image)
+            // Сохраняем с помощью Intervention Image
+            $imagePath = public_path('storage/' . $filename);
+            
+            // Создаем директорию, если она не существует
+            if (!file_exists(public_path('storage/'))) {
+                mkdir(public_path('storage/'), 0755, true);
+            }
+            
+            Image::make($image->getRealPath())
                 ->resize(300, 300, function ($constraint) {
                     $constraint->aspectRatio();
                     $constraint->upsize();
                 })
                 ->save($imagePath);
             
-            $validated['coat_of_arms_image'] = $filename;
+            // Сохраняем относительный путь
+            $validated['coat_of_arms_image'] = '/' . $filename;
         }
 
+        // Обработка изображения города
         if ($request->hasFile('city_image')) {
             $image = $request->file('city_image');
             $filename = 'city_' . time() . '.' . $image->getClientOriginalExtension();
             
-            $imagePath = storage_path('app/public/' . $filename);
-            Image::make($image)
+            $imagePath = public_path('storage/' . $filename);
+            
+            Image::make($image->getRealPath())
                 ->resize(800, 600, function ($constraint) {
                     $constraint->aspectRatio();
                     $constraint->upsize();
                 })
                 ->save($imagePath);
             
-            $validated['city_image'] = $filename;
+            $validated['city_image'] = 'cities/' . $filename;
         }
 
         City::create($validated);
@@ -92,42 +103,54 @@ class CityController extends Controller
             'interesting_fact' => 'required|string|max:1000',
         ]);
 
+        // Обработка герба
         if ($request->hasFile('coat_of_arms_image')) {
-            if ($city->coat_of_arms_image && Storage::disk('public')->exists($city->coat_of_arms_image)) {
-                Storage::disk('public')->delete($city->coat_of_arms_image);
+            // Удаляем старое изображение
+            if ($city->coat_of_arms_image && file_exists(public_path('storage/' . $city->coat_of_arms_image))) {
+                unlink(public_path('storage/' . $city->coat_of_arms_image));
             }
 
             $image = $request->file('coat_of_arms_image');
             $filename = 'coat_of_arms_' . time() . '.' . $image->getClientOriginalExtension();
             
-            $imagePath = storage_path('app/public/' . $filename);
-            Image::make($image)
+            $imagePath = public_path('storage/' . $filename);
+            
+            Image::make($image->getRealPath())
                 ->resize(300, 300, function ($constraint) {
                     $constraint->aspectRatio();
                     $constraint->upsize();
                 })
                 ->save($imagePath);
             
-            $validated['coat_of_arms_image'] = $filename;
+            $validated['coat_of_arms_image'] = '/' . $filename;
+        } else {
+            // Сохраняем старое изображение, если новое не загружено
+            $validated['coat_of_arms_image'] = $city->coat_of_arms_image;
         }
 
+        // Обработка изображения города
         if ($request->hasFile('city_image')) {
-            if ($city->city_image && Storage::disk('public')->exists($city->city_image)) {
-                Storage::disk('public')->delete($city->city_image);
+            // Удаляем старое изображение
+            if ($city->city_image && file_exists(public_path('storage/' . $city->city_image))) {
+                unlink(public_path('storage/' . $city->city_image));
             }
 
             $image = $request->file('city_image');
             $filename = 'city_' . time() . '.' . $image->getClientOriginalExtension();
             
-            $imagePath = storage_path('app/public/' . $filename);
-            Image::make($image)
+            $imagePath = public_path('storage/' . $filename);
+            
+            Image::make($image->getRealPath())
                 ->resize(800, 600, function ($constraint) {
                     $constraint->aspectRatio();
                     $constraint->upsize();
                 })
                 ->save($imagePath);
             
-            $validated['city_image'] = $filename;
+            $validated['city_image'] = '/' . $filename;
+        } else {
+            // Сохраняем старое изображение, если новое не загружено
+            $validated['city_image'] = $city->city_image;
         }
 
         $city->update($validated);

@@ -48,9 +48,6 @@ class City extends Model
     public function setInterestingFactAttribute($value)
     {
         $value = trim($value);
-        if (!empty($value) && substr($value, -1) !== '!') {
-            $value .= '!';
-        }
         $this->attributes['interesting_fact'] = $value;
     }
 
