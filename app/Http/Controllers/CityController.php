@@ -6,6 +6,7 @@ use App\Models\City;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Validator;
 
 class CityController extends Controller
 {
@@ -20,13 +21,13 @@ class CityController extends Controller
         return view('cities.create');
     }
 
+    
     public function store(Request $request)
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'coat_of_arms_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:5120', // 5MB
+            'coat_of_arms_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
             'card_text' => 'required|string|max:500',
-            'modal_title' => 'required|string|max:255',
             'modal_text' => 'required|string',
             'city_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
             'wiki_url' => 'required|url|max:500',
@@ -51,7 +52,6 @@ class CityController extends Controller
         if ($request->hasFile('city_image')) {
             $image = $request->file('city_image');
             $filename = 'city_' . time() . '.' . $image->getClientOriginalExtension();
-            
             $imagePath = storage_path('app/public/' . $filename);
             Image::make($image)
                 ->resize(800, 600, function ($constraint) {
@@ -64,16 +64,21 @@ class CityController extends Controller
         }
 
         City::create($validated);
-
         return redirect()->route('cities.index')
             ->with('success', 'Город успешно создан!');
     }
 
     public function show(City $city)
     {
-        return view('cities.show', compact('city'));
+        // Получаем все города для отображения списка на странице
+        $cities = City::all();
+        
+        return view('cities.show', compact('city', 'cities'));
     }
 
+    /**
+     * Show the form for editing the specified resource.
+     */
     public function edit(City $city)
     {
         return view('cities.edit', compact('city'));
@@ -85,7 +90,6 @@ class CityController extends Controller
             'name' => 'required|string|max:255',
             'coat_of_arms_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
             'card_text' => 'required|string|max:500',
-            'modal_title' => 'required|string|max:255',
             'modal_text' => 'required|string',
             'city_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
             'wiki_url' => 'required|url|max:500',
@@ -109,6 +113,8 @@ class CityController extends Controller
                 ->save($imagePath);
             
             $validated['coat_of_arms_image'] = $filename;
+        } else {
+            $validated['coat_of_arms_image'] = $city->coat_of_arms_image;
         }
 
         if ($request->hasFile('city_image')) {
@@ -128,19 +134,20 @@ class CityController extends Controller
                 ->save($imagePath);
             
             $validated['city_image'] = $filename;
+        } else {
+            $validated['city_image'] = $city->city_image;
         }
 
         $city->update($validated);
 
         return redirect()->route('cities.index')
-            ->with('success', 'Город обновлен');
+            ->with('success', 'Город успешно обновлен!');
     }
 
     public function destroy(City $city)
     {
         $city->delete();
-
         return redirect()->route('cities.index')
-            ->with('success', 'Город удален');
+            ->with('success', 'Город успешно удален!');
     }
 }

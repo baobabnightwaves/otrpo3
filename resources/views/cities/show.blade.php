@@ -1,71 +1,42 @@
 @extends('web')
 
 @section('content')
-<div class="container my-5">
-    <div class="row">
-        <div class="col-12">
-            <div class="card shadow-sm">
-                <div class="card-header bg-primary text-white">
-                    <h1 class="h3 mb-0">{{ $city->name }}</h1>
-                </div>
-                <div class="card-body text-dark" style="background: #f5e5b8;">
-                    <div class="row mb-4">
-                        <div class="col-md-6 text-center">
-                            <div class="position-relative">
-                                <img src="{{ asset('/storage/' . $city->coat_of_arms_image) }}" 
-                                     class="img-fluid" 
-                                     alt="Герб {{ $city->name }}"
-                                     style="height: 300px;">
-                                <span class="position-absolute top-0 start-0 bg-white border px-3 py-2 fs-6 fw-semibold">
-                                    Герб
-                                </span>
-                            </div>
-                        </div>
-                        <div class="col-md-6 text-center">
-                            <img src="{{ asset('/storage/' . $city->city_image) }}" 
-                                 class="img-fluid" 
-                                 alt="{{ $city->name }}"
-                                 style="height: 300px;">
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-8">
-                            <h3 class="mb-3">{{ $city->modal_title }}</h3>
-                            <p class="lead">{{ $city->modal_text }}</p>
-                            
-                            <div class="mt-4">
-                                <h5>Интересный факт</h5>
-                                <div class="alert alert-info">
-                                    <i class="fas fa-lightbulb me-2"></i>
-                                    {{ $city->interesting_fact }}
-                                </div>
-                            </div>
-
-                            <div class="mt-4">
-                                <a href="{{ route('cities.index') }}" class="btn btn-light btn-outline-dark">
-                                    Назад к списку
-                                </a>
-                                <a href="{{ $city->wiki_url }}" target="_blank" class="btn btn-primary">
-                                    Читать на Wikipedia
-                                </a>
-                                <a href="{{ route('cities.edit', $city) }}" class="btn btn-warning">
-                                    Редактировать
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card text-dark" style="background: #e7d090ff">
-                                <div class="card-body">
-                                    <p><strong>Дата создания:</strong> {{ $city->created_at->format('d.m.Y H:i') }}</p>
-                                    <p><strong>Последнее обновление:</strong> {{ $city->updated_at->format('d.m.Y H:i') }}</p>  
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+<header class="container text-center my-5">
+    <h1 class="display-6 fw-bold text-dark text-start">Города Португалии</h1>
+</header>
+<div class="container mb-5">
+    <div class="row g-4">
+        @foreach($cities as $c)
+            @include('partials.card', ['city' => $c])
+        @endforeach
     </div>
 </div>
+
+@include('cities.modal', ['city' => $city])
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {        
+        var modalElement = document.getElementById('{{ $city->id }}');
+        var modal = new bootstrap.Modal(modalElement, {
+            backdrop: 'static',
+            keyboard: false
+        });
+        
+        modal.show();
+        
+        modalElement.addEventListener('hidden.bs.modal', function () {
+            console.log('Модальное окно закрыто, возвращаемся на список городов');
+            window.location.href = '{{ route("cities.index") }}';
+        });
+        
+        var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+        var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+            return new bootstrap.Popover(popoverTriggerEl, {
+                trigger: 'hover focus'
+            });
+        });
+    });
+</script>
+@endpush
 @endsection
