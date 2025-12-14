@@ -4,7 +4,7 @@
     <div class="row justify-content-center">
         <div class="col-md-10">
             <div class="card text-dark">
-                <div class="card-header bg-primary text-white">
+                <div class="card-header bg-primary text-white rounded-0">
                     <h4 class="mb-0"><i class="fas fa-plus me-2"></i>Добавить новый город</h4>
                 </div>
                 <div class="card-body">

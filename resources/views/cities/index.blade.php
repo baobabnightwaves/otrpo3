@@ -1,7 +1,7 @@
 @extends('web')
 
 @section('content')
-<div class="container my-5">
+<div class="container my-5 rounded-0">
 
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -34,17 +34,17 @@
                         <td>{{ $city->created_at->format('d.m.Y H:i') }}</td>
                         <td>
                             <div class="btn-group btn-group-sm">
-                                <a href="{{ route('cities.show', $city) }}" class="btn btn-info" title="Просмотр">
+                                <a href="{{ route('cities.show', $city) }}" class="btn btn-info rounded-0 py-2 px-3" title="Просмотр">
                                     <i class="fas fa-eye"></i>
                                 </a>
-                                <a href="{{ route('cities.edit', $city) }}" class="btn btn-warning" title="Редактировать">
+                                <a href="{{ route('cities.edit', $city) }}" class="btn btn-warning rounded-0 py-2 px-3" title="Редактировать">
                                     <i class="fas fa-edit"></i>
                                 </a>
                                 <form action="{{ route('cities.destroy', $city) }}" method="POST" class="d-inline"
                                     onsubmit="return confirm({{ json_encode('Вы уверены, что хотите удалить город "' . $city->name . '"?') }})">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger" title="Удалить">
+                                    <button type="submit" class="btn btn-danger rounded-0 py-2 px-3" title="Удалить">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </form>
@@ -57,8 +57,8 @@
         </div>
     @endif
     <div class="mt-4">
-        <a href="{{ route('home') }}" class="btn btn-light btn-outline-dark">
-            <i class="fas fa-arrow-left me-2"></i>На главную
+        <a href="{{ route('home') }}" class="btn btn-light rounded-0 btn-outline-dark">
+            На главную
         </a>
     </div>
 </div>

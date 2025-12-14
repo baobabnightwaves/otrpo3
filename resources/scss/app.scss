@@ -44,8 +44,6 @@ body {
   background: $header-color !important;
 }
 
-.custom-cardб, .card, .img-fluid, .btn, .alert, .breadcrumb, .card-header, .form-control, .btn, .img-thumbnail, .modal-dialog, .modal-content { border-radius: 0 !important; }
-
 .container {
   .custom-card {
     border: 1px solid $border-color;
@@ -91,25 +89,95 @@ footer {
   } 
 }
 
-
-.modal-body {
-  img {
-    height: 300px;
-  }
-}
-
 .custom-card, .modal-content {
     color: $font-color;
 }
 
-.popover {
-  --bs-popover-bg: #ffffff !important;
-  --bs-popover-color: #000000 !important;
-  --bs-popover-header-bg: #ffffff !important;
-  --bs-popover-header-color: #000000 !important;
-  border: 1px solid #ccc;
+//register
+.progress {
+    border-radius: 10px;
+    overflow: hidden;
 }
 
-.popover-body {
-  color: #000000 !important;
+.progress-bar {
+    transition: width 0.3s ease;
 }
+
+.form-control {
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.form-check-input:checked {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+@media (max-width: 768px) {
+    .row.mb-4 .col-md-6 {
+        margin-bottom: 1rem;
+    }
+    
+    .row.mb-4 .col-md-6:last-child {
+        margin-bottom: 0;
+    }
+}
+
+.btn-outline-dark {
+    transition: all 0.3s ease;
+}
+
+.btn-outline-dark:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+//end register
+
+//login
+.card {
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.input-group:focus-within .input-group-text {
+    background-color: #e9ecef;
+    border-color: #86b7fe;
+}
+
+.form-control:focus {
+    border-color: #86b7fe;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+    border: none;
+}
+
+.btn-primary:hover {
+    box-shadow: 0 5px 15px rgba(13, 110, 253, 0.3);
+}
+
+.btn-outline-dark:hover {
+    background-color: #343a40;
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+    }
+    
+    .card-body {
+        padding: 2rem !important;
+    }
+    
+    .btn-lg {
+        padding: 0.75rem 1rem !important;
+    }
+}
+//end login

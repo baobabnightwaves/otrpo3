@@ -27,11 +27,6 @@ class City extends Model
     ];
 
     protected $dates = ['deleted_at'];
-    
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
 
     public function owner()
     {
@@ -76,5 +71,10 @@ class City extends Model
             return asset('storage/' . $this->city_image);
         }
         return null;
+    }
+
+    public function isOwnedBy($userId): bool
+    {
+        return $this->user_id == $userId;
     }
 }

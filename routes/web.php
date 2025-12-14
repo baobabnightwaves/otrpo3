@@ -3,30 +3,38 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CityController;
 use App\Models\City;
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+use App\Models\User;
 
-Route::get('/', function() {
-    $cities = \App\Models\City::all();
-    return view('index', compact('cities'));
-})->name('home');
+Route::get('/', [CityController::class, 'index'])->name('home');
 
 Route::resource('cities', CityController::class);
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    if (!Auth::check()) {
+        return redirect()->route('login');
+    }
+    
+    $user = Auth::user();
+    
+    $stats = [
+        'my_cities' => $user->cities()->count(),
+        'is_admin' => $user->is_admin,
+    ];
+    
+    if ($user->is_admin) {
+        $stats['all_cities'] = City::count();
+        $stats['all_users'] = User::count();
+        $stats['admin_users'] = User::where('is_admin', true)->count();
+    }
+    
+    return view('dashboard', compact('stats'));
 })->middleware(['auth'])->name('dashboard');
 
 require __DIR__.'/auth.php';
+
+Route::get('/admin/cities', function() {
+    $cities = City::with('user')->latest()->get();
+    return view('admin.cities', compact('cities'));
+})->name('admin.cities')->middleware(['auth', 'admin']);
+
+Route::get('/users/{user:name}/cities', [CityController::class, 'indexByUser'])->name('users.cities');

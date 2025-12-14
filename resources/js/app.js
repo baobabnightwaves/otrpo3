@@ -92,3 +92,4 @@ function initPopovers() {
         return new bootstrap.Popover(popoverTriggerEl);
     });
 }
+
