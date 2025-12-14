@@ -35,17 +35,17 @@
                         <td>
                             <div class="btn-group btn-group-sm">
                                 <a href="{{ route('cities.show', $city) }}" class="btn btn-info" title="Просмотр">
-                                    <i class="fas fa-eye"></i>
+                                    <i class="fas fa-eye px-1 py-2"></i>
                                 </a>
                                 <a href="{{ route('cities.edit', $city) }}" class="btn btn-warning" title="Редактировать">
-                                    <i class="fas fa-edit"></i>
+                                    <i class="fas fa-edit px-1 py-2"></i>
                                 </a>
                                 <form action="{{ route('cities.destroy', $city) }}" method="POST" class="d-inline"
                                     onsubmit="return confirm({{ json_encode('Вы уверены, что хотите удалить город "' . $city->name . '"?') }})">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger" title="Удалить">
-                                        <i class="fas fa-trash"></i>
+                                        <i class="fas fa-trash px-1 py-2"></i>
                                     </button>
                                 </form>
                             </div>

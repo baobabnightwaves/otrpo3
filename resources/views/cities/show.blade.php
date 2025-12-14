@@ -44,14 +44,14 @@
 
                             <div class="mt-4">
                                 <a href="{{ route('cities.index') }}" class="btn btn-light btn-outline-dark">
-                                    <i class="fas fa-arrow-left me-2"></i>Назад к списку
+                                    Назад к списку
                                 </a>
                                 <a href="{{ $city->wiki_url }}" target="_blank" class="btn btn-primary">
-                                    <i class="fas fa-external-link-alt me-2"></i>Читать на Wikipedia
+                                    Читать на Wikipedia
                                 </a>
                                 <a href="{{ route('cities.edit', $city) }}" class="btn btn-warning">
-                                            <i class="fas fa-edit me-1"></i>Редактировать
-                                        </a>
+                                    Редактировать
+                                </a>
                             </div>
                         </div>
                         <div class="col-md-4">

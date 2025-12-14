@@ -10,10 +10,10 @@
         </div>
         <div>
             <a href="{{ route('cities.index') }}" class="btn btn-light me-2">
-                <i class="fas fa-list me-1"></i>Управление городами
+                Управление городами
             </a>
             <a href="{{ route('cities.create') }}" class="btn btn-primary">
-                <i class="fas fa-plus me-1"></i>Добавить город
+                Добавить город
             </a>
         </div>
     </div>
