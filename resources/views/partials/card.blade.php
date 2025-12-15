@@ -26,7 +26,7 @@
                     Подробнее
                 </a>
                 @auth
-                    <a href="{{ route('cities.edit', $city) }}" class="btn btn-warning  rounded-0"> 
+                    <a href="{{ route('cities.edit', $city) }}" class="btn btn-warning rounded-0"> 
                         Редактировать
                     </a>
                     <form action="{{ route('cities.destroy', $city) }}" method="POST">

@@ -30895,82 +30895,26 @@ process.umask = function() { return 0; };
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var bootstrap__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bootstrap */ "./node_modules/bootstrap/dist/js/bootstrap.esm.js");
+function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
+function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 document.addEventListener('DOMContentLoaded', function () {
-  // Инициализируем все модальные окна с отключенным backdrop
-  initModals();
-  initModalNavigation();
-  initToast();
-  initPopovers();
-});
-function initModals() {
-  // Инициализируем все модальные окна с отключенным backdrop
-  document.querySelectorAll('.modal').forEach(function (modal) {
-    new bootstrap__WEBPACK_IMPORTED_MODULE_0__.Modal(modal, {
-      backdrop: false,
-      // Полностью отключаем backdrop
-      keyboard: true // Но оставляем закрытие по ESC
-    });
-  });
-}
-function initModalNavigation() {
-  var modals = Array.from(document.querySelectorAll('.modal'));
-  if (modals.length === 0) return;
-  var modalByIndex = {};
-  modals.forEach(function (el) {
-    var idx = parseInt(el.getAttribute('data-index'), 10);
-    if (!Number.isNaN(idx)) {
-      modalByIndex[idx] = el;
-    }
-  });
-  var indices = Object.keys(modalByIndex).map(Number).sort(function (a, b) {
-    return a - b;
-  });
-  document.addEventListener('keydown', function (e) {
-    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
-    var openModal = document.querySelector('.modal.show');
-    if (!openModal) return;
-    e.preventDefault();
-    var currentIndex = parseInt(openModal.getAttribute('data-index'), 10);
-    if (isNaN(currentIndex)) return;
-    var pos = indices.indexOf(currentIndex);
-    if (pos === -1) return;
-    var nextPos = e.key === 'ArrowRight' ? (pos + 1) % indices.length : (pos - 1 + indices.length) % indices.length;
-    var nextIndex = indices[nextPos];
-    var nextEl = modalByIndex[nextIndex];
-    if (!nextEl) return;
-    var currentModalInstance = bootstrap__WEBPACK_IMPORTED_MODULE_0__.Modal.getInstance(openModal);
-    if (currentModalInstance) {
-      currentModalInstance.hide();
-      openModal.addEventListener('hidden.bs.modal', function handler() {
-        openModal.removeEventListener('hidden.bs.modal', handler);
-        var nextModalInstance = new bootstrap__WEBPACK_IMPORTED_MODULE_0__.Modal(nextEl, {
-          backdrop: false
-        });
-        nextModalInstance.show();
-      });
-    }
-  });
-}
-function initToast() {
-  var loadButton = document.querySelector('.btn-light');
-  if (loadButton) {
-    loadButton.addEventListener('click', function () {
-      var toastEl = document.getElementById('loadToast');
-      if (toastEl) {
-        var toast = new bootstrap__WEBPACK_IMPORTED_MODULE_0__.Toast(toastEl);
-        toast.show();
-      }
-    });
-  }
-}
-function initPopovers() {
-  var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
-  var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+  var popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
+  var popoverList = _toConsumableArray(popoverTriggerList).map(function (popoverTriggerEl) {
     return new bootstrap__WEBPACK_IMPORTED_MODULE_0__.Popover(popoverTriggerEl);
   });
-}
+
+  // Инициализация всех модальных окон
+  var modalList = document.querySelectorAll('.modal');
+  modalList.forEach(function (modalElement) {
+    new bootstrap__WEBPACK_IMPORTED_MODULE_0__.Modal(modalElement);
+  });
+});
 
 /***/ }),
 

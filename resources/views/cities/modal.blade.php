@@ -1,4 +1,4 @@
-<div class="modal fade" id="{{ $city->id }}" aria-labelledby="modalLabel{{ $city->id }}">
+<div class="modal fade" id="modal{{ $city->id }}" aria-labelledby="modalLabel{{ $city->id }}">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
