@@ -18,7 +18,6 @@ class City extends Model
         'name',
         'coat_of_arms_image',
         'card_text',
-        'modal_title',
         'modal_text',
         'city_image',
         'wiki_url',

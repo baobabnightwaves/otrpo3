@@ -70,7 +70,7 @@
                                        autocomplete="current-password">
                                 <div class="input-group-append">
                                     <button type="button" 
-                                            class="btn btn-outline-secondary rounded-0 border-start-0 toggle-password" 
+                                            class="btn btn-outline-secondary rounded-0 toggle-password" 
                                             data-target="password"
                                             style="height: 100%;">
                                         <i class="bi bi-eye"></i>

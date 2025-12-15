@@ -15,8 +15,8 @@ $admin = User::where('email', 'admin@example.com')->first();
 if (!$admin) {
     $admin = User::create([
         'name' => 'Администратор',
-        'email' => 'admin@example.com',
-        'password' => bcrypt('password123'),
+        'email' => 'admin@gmail.com',
+        'password' => bcrypt('admin'),
         'is_admin' => true,
     ]);
     echo "✅ Создан новый администратор\n";

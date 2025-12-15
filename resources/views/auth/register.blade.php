@@ -79,7 +79,7 @@
                                            required>
                                     <div class="input-group-append">
                                         <button type="button" 
-                                                class="btn btn-outline-secondary rounded-0 border-start-0 toggle-password" 
+                                                class="btn btn-outline-secondary rounded-0 toggle-password" 
                                                 data-target="password"
                                                 style="height: 100%;">
                                             <i class="bi bi-eye"></i>
@@ -98,13 +98,13 @@
                                 </label>
                                 <div class="input-group">
                                     <input type="password" 
-                                           class="form-control py-3 text-dark rounded-0 border-end-0" 
+                                           class="form-control py-3 text-dark rounded-0" 
                                            id="password_confirmation" 
                                            name="password_confirmation" 
                                            required>
                                     <div class="input-group-append">
                                         <button type="button" 
-                                                class="btn btn-outline-secondary rounded-0 border-start-0 toggle-password" 
+                                                class="btn btn-outline-secondary rounded-0 toggle-password" 
                                                 data-target="password_confirmation"
                                                 style="height: 100%;">
                                             <i class="bi bi-eye"></i>

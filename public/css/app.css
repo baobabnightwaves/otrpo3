@@ -13032,3 +13032,44 @@ footer .container img {
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
+
+.card {
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.input-group:focus-within .input-group-text {
+  background-color: #e9ecef;
+  border-color: #86b7fe;
+}
+
+.form-control:focus {
+  border-color: #86b7fe;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+  border: none;
+}
+
+.btn-primary:hover {
+  box-shadow: 0 5px 15px rgba(13, 110, 253, 0.3);
+}
+
+.btn-outline-dark:hover {
+  background-color: #343a40;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+  .card-body {
+    padding: 2rem !important;
+  }
+  .btn-lg, .btn-group-lg > .btn {
+    padding: 0.75rem 1rem !important;
+  }
+}

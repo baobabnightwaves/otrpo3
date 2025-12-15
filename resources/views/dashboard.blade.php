@@ -12,7 +12,7 @@
                 </div>
                 <div class="card-body">
                     <div class="mb-4 text-dark">
-                        <h5>Добро пожаловать, {{ Auth::user()->name }}!</h5>
+                        <h5>{{ Auth::user()->name }}</h5>
                         <p class="text-dark">{{ Auth::user()->email }}</p>
                         @if(Auth::user()->is_admin)
                             <span class="badge bg-danger p-2 rounded-0">
@@ -25,13 +25,16 @@
                             <a href="{{ route('cities.create') }}" class="btn btn-primary rounded-0">
                                 Добавить город
                             </a>
-                            <a href="{{ route('cities.index') }}" class="btn btn-outline-dark rounded-0">
-                                Все города
-                            </a>
-                            
                             @if(Auth::user()->is_admin)
-                                <a href="{{ route('admin.cities') }}" class="btn btn-outline-danger rounded-0">
+                                <a href="{{ route('admin.cities') }}" class="btn btn-danger rounded-0">
                                     Управление городами
+                                </a>
+                                <a href="{{ route('admin.users.index') }}" class="btn btn-warning rounded-0"> 
+                                    Список пользователей
+                                </a>
+                            @else
+                                <a href="{{ route('cities.index') }}" class="btn btn-dark rounded-0">
+                                    Мои города
                                 </a>
                             @endif
                         </div>

@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\City;
+use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth; // Добавляем этот импорт
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 
@@ -13,13 +14,13 @@ class CityController extends Controller
     public function index()
     {
         if (Auth::check()) {
-            $user = Auth::user();
-            
-            if ($user->isAdmin()) {
-                $cities = City::with('user')->latest()->get();
-            } else {
-                $cities = $user->cities()->latest()->get();
-            }
+        $user = Auth::user();
+
+        if ($user->is_admin) {
+            $cities = City::withTrashed()->latest()->get();
+        } else {
+            $cities = $user->cities()->withoutTrashed()->latest()->get();
+        }
         } else {
             $cities = City::latest()->get();
         }
@@ -37,6 +38,21 @@ class CityController extends Controller
         return view('cities.create');
     }
 
+    public function restore($id)
+    {
+        $city = City::withTrashed()->findOrFail($id);
+        $user = Auth::user();
+
+        if (!$user || !$user->is_admin) {
+            return redirect()->route('cities.index')
+                ->with('error', 'Только админ может восстанавливать города');
+        }
+
+        $city->restore();
+        return redirect()->route('cities.index')
+            ->with('success', 'Город "' . $city->name . '" восстановлен!');
+    }
+
     public function store(Request $request)
     {
         if (!Auth::check()) {
@@ -48,7 +64,6 @@ class CityController extends Controller
             'name' => 'required|string|max:255',
             'coat_of_arms_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
             'card_text' => 'required|string|max:500',
-            'modal_title' => 'required|string|max:255',
             'modal_text' => 'required|string',
             'city_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
             'wiki_url' => 'required|url|max:500',
@@ -97,14 +112,26 @@ class CityController extends Controller
 
     public function show(City $city)
     {
-        return view('cities.show', compact('city'));
+        if (Auth::check()) {
+            $user = Auth::user();
+
+            if ($user->is_admin) {
+                $cities = City::withTrashed()->latest()->get();
+            } else {
+                $cities = $user->cities()->withoutTrashed()->latest()->get();
+            }
+        } else {
+            $cities = City::withoutTrashed()->latest()->get();
+        }
+
+        return view('cities.show', compact('city', 'cities'));
     }
 
     public function edit(City $city)
     {
         if (!$this->authorizeCityAccess($city)) {
             return redirect()->route('cities.index')
-                ->with('error', 'У вас нет прав для редактирования этого города.');
+                ->with('error', 'У вас нет прав для редактирования этого города');
         }
         
         return view('cities.edit', compact('city'));
@@ -121,7 +148,6 @@ class CityController extends Controller
             'name' => 'required|string|max:255',
             'coat_of_arms_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
             'card_text' => 'required|string|max:500',
-            'modal_title' => 'required|string|max:255',
             'modal_text' => 'required|string',
             'city_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
             'wiki_url' => 'required|url|max:500',
@@ -178,21 +204,22 @@ class CityController extends Controller
 
     public function destroy(City $city)
     {
+        $user = Auth::user();
+    
         if (!$this->authorizeCityAccess($city)) {
             return redirect()->route('cities.index')
                 ->with('error', 'У вас нет прав для удаления этого города.');
         }
-        
         $city->delete();
-
         return redirect()->route('cities.index')
             ->with('success', 'Город удален');
     }
 
+
     private function authorizeCityAccess(City $city): bool
     {
         $user = Auth::user();
-        
+
         if (!$user) {
             return false;
         }
@@ -201,7 +228,7 @@ class CityController extends Controller
             return true;
         }
         
-        return $city->user_id === $user->id;
+        return $city->user_id && $city->user_id == $user->id;
     }
 
     public function indexByUser(User $user = null)

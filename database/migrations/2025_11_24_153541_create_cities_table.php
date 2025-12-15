@@ -13,8 +13,6 @@ class CreateCitiesTable extends Migration
             $table->string('name');
             $table->string('coat_of_arms_image');
             $table->text('card_text');
-            $table->string('modal_id');
-            $table->string('modal_title');
             $table->string('modal_text');
             $table->string('city_image');
             $table->string('wiki_url');

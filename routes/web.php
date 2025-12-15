@@ -5,7 +5,9 @@ use App\Http\Controllers\CityController;
 use App\Models\City;
 use App\Models\User;
 
-Route::get('/', [CityController::class, 'index'])->name('home');
+Route::get('/', function() {
+    return redirect('/cities');
+});
 
 Route::resource('cities', CityController::class);
 
@@ -33,8 +35,32 @@ Route::get('/dashboard', function () {
 require __DIR__.'/auth.php';
 
 Route::get('/admin/cities', function() {
-    $cities = City::with('user')->latest()->get();
-    return view('admin.cities', compact('cities'));
+    $cities = City::withTrashed()->with('owner')->latest()->get();
+    return view('cities.index', compact('cities'));
 })->name('admin.cities')->middleware(['auth', 'admin']);
 
-Route::get('/users/{user:name}/cities', [CityController::class, 'indexByUser'])->name('users.cities');
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
+    Route::get('/users', [App\Http\Controllers\Admin\UserController::class, 'index'])
+        ->name('users.index');
+    
+    Route::get('/users/{user}', [App\Http\Controllers\Admin\UserController::class, 'show'])
+        ->name('users.show');
+    
+    Route::get('/users/{user}/edit', [App\Http\Controllers\Admin\UserController::class, 'edit'])
+        ->name('users.edit');
+    
+    Route::put('/users/{user}', [App\Http\Controllers\Admin\UserController::class, 'update'])
+        ->name('users.update');
+    
+    Route::delete('/users/{user}', [App\Http\Controllers\Admin\UserController::class, 'destroy'])
+        ->name('users.destroy');
+    
+    Route::post('/users/{user}/toggle-admin', [App\Http\Controllers\Admin\UserController::class, 'toggleAdmin'])
+        ->name('users.toggle-admin');
+    
+    Route::get('/users/{user}/cities', [App\Http\Controllers\Admin\UserController::class, 'userCities'])
+        ->name('users.cities');
+});
+
+Route::post('/cities/{id}/restore', [CityController::class, 'restore'])
+    ->name('cities.restore');
