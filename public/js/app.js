@@ -30898,16 +30898,19 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 document.addEventListener('DOMContentLoaded', function () {
+  // Инициализируем все модальные окна с отключенным backdrop
   initModals();
   initModalNavigation();
   initToast();
   initPopovers();
 });
 function initModals() {
+  // Инициализируем все модальные окна с отключенным backdrop
   document.querySelectorAll('.modal').forEach(function (modal) {
     new bootstrap__WEBPACK_IMPORTED_MODULE_0__.Modal(modal, {
       backdrop: false,
-      keyboard: true
+      // Полностью отключаем backdrop
+      keyboard: true // Но оставляем закрытие по ESC
     });
   });
 }
