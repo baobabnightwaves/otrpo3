@@ -14,7 +14,7 @@
 
 @include('cities.modal', ['city' => $city])
 
-@push('scripts')
+<!-- @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {        
         var modalElement = document.getElementById('{{ $city->id }}');
@@ -22,14 +22,11 @@
             backdrop: 'static',
             keyboard: false
         });
-        
         modal.show();
-        
         modalElement.addEventListener('hidden.bs.modal', function () {
             console.log('Модальное окно закрыто, возвращаемся на список городов');
             window.location.href = '{{ route("cities.index") }}';
         });
-        
         var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
         var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
             return new bootstrap.Popover(popoverTriggerEl, {
@@ -38,5 +35,5 @@
         });
     });
 </script>
-@endpush
+@endpush -->
 @endsection

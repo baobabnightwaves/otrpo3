@@ -21,7 +21,6 @@ class CityController extends Controller
         return view('cities.create');
     }
 
-    
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -38,7 +37,9 @@ class CityController extends Controller
             $image = $request->file('coat_of_arms_image');
             $filename = 'coat_of_arms_' . time() . '.' . $image->getClientOriginalExtension();
             
+            // ВАЖНО: Правильный путь для сохранения
             $imagePath = storage_path('app/public/' . $filename);
+            
             Image::make($image)
                 ->resize(300, 300, function ($constraint) {
                     $constraint->aspectRatio();
@@ -52,7 +53,10 @@ class CityController extends Controller
         if ($request->hasFile('city_image')) {
             $image = $request->file('city_image');
             $filename = 'city_' . time() . '.' . $image->getClientOriginalExtension();
+            
+            // ВАЖНО: Правильный путь для сохранения
             $imagePath = storage_path('app/public/' . $filename);
+            
             Image::make($image)
                 ->resize(800, 600, function ($constraint) {
                     $constraint->aspectRatio();
@@ -64,21 +68,17 @@ class CityController extends Controller
         }
 
         City::create($validated);
+        
         return redirect()->route('cities.index')
             ->with('success', 'Город успешно создан!');
     }
 
     public function show(City $city)
     {
-        // Получаем все города для отображения списка на странице
-        $cities = City::all();
-        
+        $cities = City::all();        
         return view('cities.show', compact('city', 'cities'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(City $city)
     {
         return view('cities.edit', compact('city'));
@@ -102,9 +102,9 @@ class CityController extends Controller
             }
 
             $image = $request->file('coat_of_arms_image');
-            $filename = 'coat_of_arms_' . time() . '.' . $image->getClientOriginalExtension();
-            
+            $filename = 'coat_of_arms_' . time() . '.' . $image->getClientOriginalExtension();            
             $imagePath = storage_path('app/public/' . $filename);
+            
             Image::make($image)
                 ->resize(300, 300, function ($constraint) {
                     $constraint->aspectRatio();
@@ -126,6 +126,7 @@ class CityController extends Controller
             $filename = 'city_' . time() . '.' . $image->getClientOriginalExtension();
             
             $imagePath = storage_path('app/public/' . $filename);
+            
             Image::make($image)
                 ->resize(800, 600, function ($constraint) {
                     $constraint->aspectRatio();

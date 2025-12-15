@@ -1,5 +1,4 @@
 @extends('web')
-
 @section('content')
 <header class="container text-center my-5">
     <h1 class="display-6 fw-bold text-dark text-start">Города Португалии</h1>
