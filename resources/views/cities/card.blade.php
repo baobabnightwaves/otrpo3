@@ -16,37 +16,52 @@
             </p>
             <div class="d-grid gap-2 mt-3">
                 @if (!$city->trashed())
-                <a href="{{ route('cities.show', $city) }}" class="btn btn-primary"> 
-                    Подробнее
-                </a>
+                    <a href="{{ route('cities.show', $city) }}" class="btn btn-primary"> 
+                        Подробнее
+                    </a>
                 @endif
-                @if (!Gate::allows('modify-object', $city))
-                <a href="{{ route('cities.edit', $city) }}" class="btn btn-warning"> 
-                    Редактировать
-                </a>
-                <form action="{{ route('cities.destroy', $city) }}" method="POST">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-danger w-100" onclick="return confirm('Удалить город {{ $city->name }}?')"> 
-                        Удалить
-                    </button>
-                </form>
+                @if (Gate::allows('modify-object', $city))
+                    @if(!$city->trashed())
+                        <a href="{{ route('cities.edit', $city) }}" class="btn btn-warning"> 
+                            Редактировать
+                        </a>
+                        <form action="{{ route('cities.destroy', $city) }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger w-100" onclick="return confirm('Удалить город {{ $city->name }}?')"> 
+                                Удалить
+                            </button>
+                        </form>
+                    @else
+                        @if (Auth::check() && Auth::user()->is_admin)
+                            <form action="{{ route('cities.purge', $city->id) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger w-100" onclick="return confirm('Безвозвратно удалить город {{ $city->name }}?')"> 
+                                    Удалить безвозвратно
+                                </button>
+                            </form>
+                        @endif
+                    @endif
                 @endif
-                @if($city->trashed() && Auth::check() && Auth::user()->is_admin)
-                <form action="{{ route('cities.restore', $city->id) }}" method="POST">
-                    @csrf
-                    @method('POST')
-                    <button type="submit" class="btn btn-success w-100" onclick="return confirm('Восстановить город {{ $city->name }}?')"> 
-                        Восстановить
-                    </button>
-                </form>
-                @endif
+                    @if($city->trashed() && Auth::check() && Auth::user()->is_admin)
+                        <form action="{{ route('cities.restore', $city->id) }}" method="POST">
+                            @csrf
+                            @method('POST')
+                            <button type="submit" class="btn btn-success w-100" onclick="return confirm('Восстановить город {{ $city->name }}?')"> 
+                                Восстановить
+                            </button>
+                        </form>
+                    @endif
                 @php
                     $owner = \App\Models\User::find($city->user_id);
                 @endphp
                 @if($owner)
                     <p class="text-dark mb-0">
                         Владелец: {{ $owner->name }}
+                    </p>
+                    <p class="text-dark mb-0">
+                        Почта: {{ $owner->email}}
                     </p>
                 @endif
             </div>

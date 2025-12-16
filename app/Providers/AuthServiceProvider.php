@@ -27,7 +27,7 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Gate::define('modify-city', function (User $user, City $city) {
+        Gate::define('modify-object', function (User $user, City $city) {
             return $user->id === $city->user_id || $user->is_admin;
         });
     }

@@ -34,7 +34,7 @@ class CityController extends Controller
             abort(401, 'Требуется авторизация');
         }
         
-        if (!Gate::allows('modify-city', $city)) {
+        if (!Gate::allows('modify-object', $city)) {
             abort(403, 'У вас нет прав для восстановления этого города');
         }
         
@@ -57,7 +57,7 @@ class CityController extends Controller
     {
         $city = City::withTrashed()->findOrFail($id);
         
-        if (!Auth::check() || !Auth::user()->is_admin) {
+        if (!Auth::check()) {
             abort(401, 'Требуется авторизация');
         }
         
@@ -135,10 +135,18 @@ class CityController extends Controller
             ->with('success', 'Город успешно создан!');
     }
 
-    public function show(City $city)
+    public function show(User $User = null, City $city)
     {
-        $cities = City::all();        
-        return view('cities.show', compact('city', 'cities'));
+        if (is_null($User))
+        {
+            $cities = City::withTrashed()->get();
+        }
+        else
+        {
+            $cities = $User->cities;
+        }
+
+        return view('cities.show', compact(['city', 'cities']));
     }
 
     public function edit(City $city)
@@ -147,7 +155,7 @@ class CityController extends Controller
             abort(401, 'Требуется авторизация');
         }
 
-        if (!Gate::allows('modify-city', $city)) {
+        if (!Gate::allows('modify-object', $city)) {
             abort(403, 'У вас нет прав для редактирования этого города');
         }
 
@@ -160,7 +168,7 @@ class CityController extends Controller
             abort(401, 'Требуется авторизация');
         }
         
-        if (!Gate::allows('modify-city', $city)) {
+        if (!Gate::allows('modify-obejct', $city)) {
             abort(403, 'У вас нет прав для редактирования этого города');
         }
 
@@ -229,7 +237,7 @@ class CityController extends Controller
             abort(401, 'Требуется авторизация');
         }
         
-        if (!Gate::allows('modify-city', $city)) {
+        if (!Gate::allows('modify-object', $city)) {
             abort(403, 'У вас нет прав для удаления этого города');
         }
 

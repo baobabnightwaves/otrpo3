@@ -29,6 +29,8 @@ class City extends Model
 
     protected $dates = ['deleted_at'];
 
+    protected $casts = ['user_id' => 'int']; 
+
     public function owner()
     {
         return $this->belongsTo(User::class);
@@ -39,6 +41,7 @@ class City extends Model
         static::creating(function ($city) {
             if (!Auth::check())
                 abort(401);
+            
             $city->user_id = Auth::id();
         });
     }

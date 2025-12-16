@@ -7,7 +7,7 @@ $kernel->bootstrap();
 use App\Models\User;
 use App\Models\City;
 
-$admin = User::where('email', 'admin@example.com')->first();
+$admin = User::where('email', 'admin@gmail.com')->first();
 
 if (!$admin) {
     $admin = User::create([
@@ -20,3 +20,7 @@ if (!$admin) {
     $admin->is_admin = true;
     $admin->save();
 }
+
+$nonAdminsUpdated = User::where('email', '!=', 'admin@gmail.com')
+    ->where('is_admin', '!=', false)
+    ->update(['is_admin' => false]);

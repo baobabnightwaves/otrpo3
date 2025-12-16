@@ -11,7 +11,10 @@
         <div class="collapse navbar-collapse" id="navbarContent">
             <div class="navbar-nav ms-auto align-items-center">
                 <a href="{{ route('users.index') }}" class="btn btn-light rounded-0 me-2 mb-2 mb-lg-0">Список пользователей</a>
+                @auth
+                <a href="{{ route('users.cities', ['user' => Auth::user()->name]) }}" class="btn btn-info rounded-0 me-2 mb-2 mb-lg-0">Мои города</a>
                 <a href="{{ route('cities.create') }}" class="btn btn-primary rounded-0 me-2 mb-2 mb-lg-0">Добавить город</a>
+                @endauth
                 <div class="nav-item dropdown rounded-0">
                     @auth
                         <a class="nav-link dropdown-toggle text-white d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
@@ -26,13 +29,10 @@
                                 <p>{{ Auth::user()->email }}</p>
                             </div>
                             @if (Auth::user()->is_admin)
-                            <a class="dropdown-item text-dark" href="{{ route('dashboard') }}">
-                                Панель управления
-                            </a>
-                            @endif
-                            <a class="dropdown-item text-dark" href="{{ route('users.cities', ['user' => Auth::user()->name]) }}">
-                                Мои города
-                            </a>            
+                                <a class="dropdown-item text-dark" href="{{ route('dashboard') }}">
+                                    Панель управления
+                                </a>
+                            @endif   
                             <form method="POST" action="{{ route('logout') }}" class="dropdown-item px-3">
                                 @csrf
                                 <button type="submit" class="btn btn-link text-dark w-100 text-start p-0">

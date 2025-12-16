@@ -20,7 +20,7 @@
             </div>
         @endif
         @foreach($cities as $c)
-            @include('partials.card', ['city' => $c])
+            @include('cities.card', ['city' => $c])
         @endforeach
     </div>
 </div>

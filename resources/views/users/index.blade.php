@@ -73,7 +73,7 @@
         
     @endif
     <div class="mt-4">
-        <a href="{{ route('dashboard') }}" class="btn btn-light btn-outline-dark rounded-0">
+        <a href="{{ route('cities.index') }}" class="btn btn-light btn-outline-dark rounded-0">
             Назад
         </a>
     </div>
