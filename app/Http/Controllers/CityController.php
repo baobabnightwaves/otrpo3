@@ -145,8 +145,8 @@ class CityController extends Controller
         {
             $cities = $User->cities;
         }
-
-        return view('cities.show', compact(['city', 'cities']));
+        $openModal = $city->id;
+        return view('cities.index', compact(['cities', 'openModal']));
     }
 
     public function edit(City $city)
@@ -168,7 +168,7 @@ class CityController extends Controller
             abort(401, 'Требуется авторизация');
         }
         
-        if (!Gate::allows('modify-obejct', $city)) {
+        if (!Gate::allows('modify-object', $city)) {
             abort(403, 'У вас нет прав для редактирования этого города');
         }
 

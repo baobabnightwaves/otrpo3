@@ -41,7 +41,7 @@ class City extends Model
         static::creating(function ($city) {
             if (!Auth::check())
                 abort(401);
-            
+
             $city->user_id = Auth::id();
         });
     }

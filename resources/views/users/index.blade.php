@@ -32,6 +32,9 @@
                                 <th>Email</th>
                                 <th>Статус</th>
                                 <th>Дата регистрации</th>
+                                @if (Auth::check() && Auth::user()->is_admin)
+                                    <th>Действия</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody>
@@ -61,6 +64,40 @@
                                 <td>
                                     {{ $user->created_at->format('d.m.Y H:i') }}
                                 </td>
+                                @if (Auth::check() && Auth::user()->is_admin)
+                                    <td>
+                                        <div class="btn-group btn-group-sm" role="group">
+                                            @if($user->id !== auth()->id())
+                                                <form action="{{ route('users.toggle-admin', $user) }}" 
+                                                      method="POST" 
+                                                      class="d-inline">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <button type="submit" 
+                                                            class="btn btn-{{ $user->is_admin ? 'warning' : 'success' }}"
+                                                            onclick="return confirm('{{ $user->is_admin ? 'Забрать права администратора у ' : 'Назначить администратором пользователем' }}{{ $user->name }}?')"
+                                                            title="{{ $user->is_admin ? 'Забрать права админа' : 'Сделать администратором' }}">
+                                                            {{ $user->is_admin ? 'Забрать админку' : 'Дать админку' }}
+                                                    </button>
+                                                </form>
+                                            @endif
+                                            @if($user->id !== auth()->id())
+                                                <form action="{{ route('users.destroy', $user) }}" 
+                                                      method="POST" 
+                                                      class="d-inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" 
+                                                            class="btn btn-danger"
+                                                            onclick="return confirm('Удалить пользователя {{ $user->name }}.\n\nВсе города пользователя будут удалены.')"
+                                                            title="Удалить пользователя">
+                                                            Удалить
+                                                    </button>
+                                                </form>
+                                            @endif
+                                        </div>
+                                    </td>
+                                @endif
                             </tr>
                             @endforeach
                         </tbody>

@@ -11,7 +11,6 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
         @endif
-
         @if(session('error'))
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 <i class="fas fa-exclamation-circle me-2"></i>{{ session('error') }}
@@ -26,4 +25,16 @@
 @foreach($cities as $city)
     @include('cities.modal', ['city' => $city])
 @endforeach
+@if(isset($openModal))
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const modalElement = document.getElementById('modal{{ $openModal }}');
+    if (modalElement) {
+        const modal = new bootstrap.Modal(modalElement);
+        modal.show();
+        addKeyboardNavigation();
+    }
+});
+</script>
+@endif
 @endsection

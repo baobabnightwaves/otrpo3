@@ -12,8 +12,8 @@
             <div class="navbar-nav ms-auto align-items-center">
                 <a href="{{ route('users.index') }}" class="btn btn-light rounded-0 me-2 mb-2 mb-lg-0">Список пользователей</a>
                 @auth
-                <a href="{{ route('users.cities', ['user' => Auth::user()->name]) }}" class="btn btn-info rounded-0 me-2 mb-2 mb-lg-0">Мои города</a>
-                <a href="{{ route('cities.create') }}" class="btn btn-primary rounded-0 me-2 mb-2 mb-lg-0">Добавить город</a>
+                    <a href="{{ route('users.cities', ['user' => Auth::user()->name]) }}" class="btn btn-primary rounded-0 me-2 mb-2 mb-lg-0">Мои города</a>
+                    <a href="{{ route('cities.create') }}" class="btn btn-success rounded-0 me-2 mb-2 mb-lg-0">Добавить город</a>
                 @endauth
                 <div class="nav-item dropdown rounded-0">
                     @auth
@@ -58,5 +58,6 @@
                     @endauth
                 </div>
             </div>
+        </div>
     </div>
 </nav>
