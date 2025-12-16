@@ -3,26 +3,92 @@
 namespace App\Http\Controllers;
 
 use App\Models\City;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Gate;
 
 class CityController extends Controller
 {
-    public function index()
+    public function index(User $User = null)
     {
-        $cities = City::all();
-        return view('cities.index', compact('cities'));
+        if (is_null($User))
+        {
+            $cities = City::withTrashed()->get();
+        }
+        else
+        {
+            $cities = $User->cities;
+        }
+
+        return view('cities.index', compact(['cities']));
+    }
+
+    public function restore(Request $request, int $id)
+    {
+        $city = City::withTrashed()->findOrFail($id);
+        
+        if (!Auth::check()) {
+            abort(401, 'Требуется авторизация');
+        }
+        
+        if (!Gate::allows('modify-city', $city)) {
+            abort(403, 'У вас нет прав для восстановления этого города');
+        }
+        
+        if (!$city->trashed()) {
+            return redirect()->back()
+                ->with('error', 'Город уже восстановлен');
+        }
+        
+        try {
+            $city->restore();
+            return redirect()->route('cities.index', $city)
+                ->with('success', 'Город "' . $city->name . '" успешно восстановлен');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Ошибка при восстановлении города: ' . $e->getMessage());
+        }
+    }
+
+    public function purge(Request $request, int $id)
+    {
+        $city = City::withTrashed()->findOrFail($id);
+        
+        if (!Auth::check() || !Auth::user()->is_admin) {
+            abort(401, 'Требуется авторизация');
+        }
+        
+        if (!Auth::user()->is_admin) {
+            abort(403, 'Только администратор может полностью удалять города');
+        }
+
+        try {
+            $city->forceDelete();
+            return redirect()->route('cities.index');
+                
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Ошибка при удалении города: ' . $e->getMessage());
+        }
     }
 
     public function create()
     {
+        if (!Auth::check()) {
+            abort(401, 'Требуется авторизация');
+        }
         return view('cities.create');
     }
 
     public function store(Request $request)
     {
+        if (!Auth::check()) {
+            abort(401, 'Требуется авторизация');
+        }
+        
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'coat_of_arms_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
@@ -35,9 +101,7 @@ class CityController extends Controller
 
         if ($request->hasFile('coat_of_arms_image')) {
             $image = $request->file('coat_of_arms_image');
-            $filename = 'coat_of_arms_' . time() . '.' . $image->getClientOriginalExtension();
-            
-            // ВАЖНО: Правильный путь для сохранения
+            $filename = 'coat_of_arms_' . time() . '.' . $image->getClientOriginalExtension();            
             $imagePath = storage_path('app/public/' . $filename);
             
             Image::make($image)
@@ -52,9 +116,7 @@ class CityController extends Controller
 
         if ($request->hasFile('city_image')) {
             $image = $request->file('city_image');
-            $filename = 'city_' . time() . '.' . $image->getClientOriginalExtension();
-            
-            // ВАЖНО: Правильный путь для сохранения
+            $filename = 'city_' . time() . '.' . $image->getClientOriginalExtension();            
             $imagePath = storage_path('app/public/' . $filename);
             
             Image::make($image)
@@ -81,11 +143,27 @@ class CityController extends Controller
 
     public function edit(City $city)
     {
+        if (!Auth::check()) {
+            abort(401, 'Требуется авторизация');
+        }
+
+        if (!Gate::allows('modify-city', $city)) {
+            abort(403, 'У вас нет прав для редактирования этого города');
+        }
+
         return view('cities.edit', compact('city'));
     }
 
     public function update(Request $request, City $city)
     {
+        if (!Auth::check()) {
+            abort(401, 'Требуется авторизация');
+        }
+        
+        if (!Gate::allows('modify-city', $city)) {
+            abort(403, 'У вас нет прав для редактирования этого города');
+        }
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'coat_of_arms_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
@@ -147,6 +225,14 @@ class CityController extends Controller
 
     public function destroy(City $city)
     {
+        if (!Auth::check()) {
+            abort(401, 'Требуется авторизация');
+        }
+        
+        if (!Gate::allows('modify-city', $city)) {
+            abort(403, 'У вас нет прав для удаления этого города');
+        }
+
         $city->delete();
         return redirect()->route('cities.index')
             ->with('success', 'Город успешно удален!');

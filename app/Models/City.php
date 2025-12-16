@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Auth;
 
 class City extends Model
 {
@@ -22,10 +23,25 @@ class City extends Model
         'modal_text',
         'city_image',
         'wiki_url',
-        'interesting_fact'
+        'interesting_fact',
+        'user_id'
     ];
 
     protected $dates = ['deleted_at'];
+
+    public function owner()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    protected static function booted()
+    {
+        static::creating(function ($city) {
+            if (!Auth::check())
+                abort(401);
+            $city->user_id = Auth::id();
+        });
+    }
 
     public function setNameAttribute($value)
     {
