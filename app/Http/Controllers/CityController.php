@@ -75,8 +75,9 @@ class CityController extends Controller
 
     public function show(City $city)
     {
-        $cities = City::all();        
-        return view('cities.show', compact('city', 'cities'));
+        $cities = City::all();
+        $openModal = $city->id;
+        return view('cities.index', compact('cities', 'openModal'));
     }
 
     public function edit(City $city)

@@ -1,4 +1,4 @@
-<div class="modal fade" id="{{ $city->id }}" aria-labelledby="modalLabel{{ $city->id }}">
+<div class="modal fade" id="modal{{ $city->id }}" aria-labelledby="modalLabel{{ $city->id }}" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -39,6 +39,9 @@
                             data-bs-content="{{ $city->interesting_fact }}">
                         Интересный факт
                     </button>
+                    <a href="{{ route('cities.edit', $city) }}" class="btn btn-warning"> 
+                        Редактировать
+                    </a>
                 </div>
             </div>
         </div>
