@@ -21,7 +21,7 @@ $container-max-widths: (
   xxxl: 1900px
 );
 
-@import "bootstrap/scss/bootstrap";
+//@import "bootstrap/scss/bootstrap";
 
 @mixin card-colors($start-color, $steps) {
   @for $i from 1 through $steps {
