@@ -22,7 +22,7 @@
             </p>
             <div class="d-grid gap-2 mt-3">
                 @if (Gate::allows('modify-object', $city))
-                    @if(!$city->trashed())
+                        @if(!$city->trashed())
                         <form action="{{ route('cities.destroy', $city) }}" method="POST">
                             @csrf
                             @method('DELETE')
