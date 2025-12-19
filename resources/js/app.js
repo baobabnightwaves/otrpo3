@@ -1,6 +1,7 @@
 require('./bootstrap');
 
-//import * as bootstrap from 'bootstrap';
+import * as bootstrap from 'bootstrap';
+window.bootstrap = bootstrap;
 
 document.addEventListener('DOMContentLoaded', function() {
     initToast();
@@ -9,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 function initToast() {
-    const loadButton = document.querySelector('.btn-light');
+    const loadButton = document.querySelector('.btn-light');    
     if (loadButton) {
         loadButton.addEventListener('click', () => {
             const toastEl = document.getElementById('loadToast');
