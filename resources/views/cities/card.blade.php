@@ -20,6 +20,11 @@
             <p class="card-text flex-grow-1">
                 {{ $city->card_text }}
             </p>
+            <div class="mb-2">
+                <a href="{{ route('comments.index', $city) }}" class="btn btn-info btn-sm w-100">
+                    <i class="fas fa-comments"></i> Комментарии ({{ $city->comments->count() }})
+                </a>
+            </div>
             <div class="d-grid gap-2 mt-3">
                 @if (Gate::allows('modify-object', $city))
                         @if(!$city->trashed())

@@ -32,6 +32,9 @@
                                 <th>Email</th>
                                 <th>Статус</th>
                                 <th>Дата регистрации</th>
+                                @if (Auth::check())
+                                    <th>Дружба</th>
+                                @endif
                                 @if (Auth::check() && Auth::user()->is_admin)
                                     <th>Действия</th>
                                 @endif
@@ -64,6 +67,37 @@
                                 <td>
                                     {{ $user->created_at->format('d.m.Y H:i') }}
                                 </td>
+                                @if (Auth::check())
+                                    <td>
+                                        @if($user->id !== auth()->id())
+                                            @if(Auth::user()->friendsWith($user))
+                                                <form action="{{ route('users.unfriend', ['user' => $user->name]) }}" 
+                                                      method="POST" 
+                                                      class="d-inline">
+                                                    @csrf
+                                                    <button type="submit" 
+                                                            class="btn btn-sm btn-outline-danger rounded-0"
+                                                            title="Удалить из друзей">
+                                                        <i class="fas fa-user-times"></i> Удалить из друзей
+                                                    </button>
+                                                </form>
+                                            @else
+                                                <form action="{{ route('users.befriend', ['user' => $user->name]) }}" 
+                                                      method="POST" 
+                                                      class="d-inline">
+                                                    @csrf
+                                                    <button type="submit" 
+                                                            class="btn btn-sm btn-outline-success rounded-0"
+                                                            title="Добавить в друзья">
+                                                        <i class="fas fa-user-plus"></i> Добавить в друзья
+                                                    </button>
+                                                </form>
+                                            @endif
+                                        @else
+                                            <span class="text-muted">—</span>
+                                        @endif
+                                    </td>
+                                @endif
                                 @if (Auth::check() && Auth::user()->is_admin)
                                     <td>
                                         <div class="btn-group btn-group-sm" role="group">

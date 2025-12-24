@@ -47,4 +47,57 @@ class UserController extends Controller
         return redirect()->route('users.index')
             ->with('success', "Пользователь {$userName} успешно удален");
     }
+
+    public function befriend(User $user)
+    {
+        if (!Auth::check()) {
+            abort(401, 'Требуется авторизация');
+        }
+
+        $currentUser = Auth::user();
+        
+        if ($currentUser->id === $user->id) {
+            return redirect()->back()
+                ->with('error', 'Вы не можете добавить себя в друзья');
+        }
+
+        if ($currentUser->addFriend($user)) {
+            return redirect()->back()
+                ->with('success', "Пользователь {$user->name} добавлен в друзья");
+        }
+
+        return redirect()->back()
+            ->with('error', 'Этот пользователь уже в вашем списке друзей');
+    }
+
+    public function unfriend(User $user)
+    {
+        if (!Auth::check()) {
+            abort(401, 'Требуется авторизация');
+        }
+
+        $currentUser = Auth::user();
+        
+        if ($currentUser->removeFriend($user)) {
+            return redirect()->back()
+                ->with('success', "Пользователь {$user->name} удален из друзей");
+        }
+
+        return redirect()->back()
+            ->with('error', 'Ошибка при удалении из друзей');
+    }
+
+    public function feed(User $user)
+    {
+        $cities = collect();
+        
+        foreach ($user->friends as $friend) {
+            $friendCities = $friend->cities;
+            $cities = $cities->merge($friendCities);
+        }
+        
+        $cities = $cities->sortByDesc('created_at');
+        
+        return view('cities.index', compact('cities'));
+    }
 }

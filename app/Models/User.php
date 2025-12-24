@@ -11,29 +11,14 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     protected $fillable = [
         'name', 'email', 'password', 'is_admin'
     ];
 
-    /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
     protected $hidden = [
         'password', 'remember_token',
     ];
 
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
     protected $casts = [
         'email_verified_at' => 'datetime',
         'is_admin' => 'boolean'
@@ -42,5 +27,45 @@ class User extends Authenticatable
     public function cities()
     {
         return $this->hasMany(City::class)->withTrashed();
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    public function friends()
+    {
+        return $this->belongsToMany(User::class, 'friends', 'user_id', 'friend_id')
+                    ->withTimestamps();
+    }
+
+    public function friendsWith(User $user)
+    {
+        return !is_null($this->friends()->find($user->id));
+    }
+
+    public function addFriend(User $user)
+    {
+        if ($this->id === $user->id) {
+            return false;
+        }
+
+        if ($this->friendsWith($user)) {
+            return false;
+        }
+
+        $this->friends()->attach($user->id);
+        $user->friends()->attach($this->id);
+
+        return true;
+    }
+
+    public function removeFriend(User $user)
+    {
+        $this->friends()->detach($user->id);
+        $user->friends()->detach($this->id);
+
+        return true;
     }
 }
