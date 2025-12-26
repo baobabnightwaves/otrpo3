@@ -6,6 +6,7 @@ use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvid
 use Illuminate\Support\Facades\Gate;
 use App\Models\City;
 use App\Models\User;
+use Laravel\Passport\Passport;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -15,7 +16,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        // 'App\Model' => 'App\Policies\ModelPolicy',
+        // 'App\\Model' => 'App\\Policies\\ModelPolicy',
     ];
 
     /**
@@ -26,6 +27,8 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
+
+        Passport::routes();
 
         Gate::define('modify-object', function (User $user, City $city) {
             return $user->id === $city->user_id || $user->is_admin;

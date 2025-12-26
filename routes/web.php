@@ -16,6 +16,9 @@ Route::get('/users', [UserController::class, 'index'])->name('users.index');
 Route::get('/users/{user:name}/feed', [UserController::class, 'feed'])->name('users.feed');
 
 Route::middleware(['auth'])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
     Route::get('/cities/create', [CityController::class, 'create'])->name('cities.create');
     Route::post('/cities', [CityController::class, 'store'])->name('cities.store');
     Route::get('/cities/{city}/edit', [CityController::class, 'edit'])->name('cities.edit');

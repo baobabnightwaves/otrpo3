@@ -25,19 +25,22 @@
                         <div class="dropdown-menu dropdown-menu-end text-dark rounded-0">
                             <div class="dropdown-header text-dark">
                                 <div class="fw-bold">{{ Auth::user()->name }}</div>
-                                <p>{{ Auth::user()->email }}</p>
+                                <p class="mb-0">{{ Auth::user()->email }}</p>
                             </div>
                             <a class="dropdown-item text-dark" href="{{ route('users.cities', ['user' => Auth::user()->name]) }}">
-                                Мои города
+                                <i class="fas fa-city me-2"></i>Мои города
                             </a>
                             <a class="dropdown-item text-dark" href="{{ route('users.feed', ['user' => Auth::user()->name]) }}">
-                                Лента друзей
+                                <i class="fas fa-rss me-2"></i>Лента друзей
+                            </a>
+                            <a class="dropdown-item text-dark" href="{{ route('dashboard') }}">
+                                <i class="fas fa-key me-2"></i>Dashboard (API Токены)
                             </a>
                             <div class="dropdown-divider"></div>
                             <form method="POST" action="{{ route('logout') }}" class="dropdown-item px-3">
                                 @csrf
-                                <button type="submit" class="btn btn-link text-dark w-100 text-start p-0">
-                                    Выйти
+                                <button type="submit" class="btn btn-link text-dark text-decoration-none w-100 text-start p-0">
+                                    <i class="fas fa-sign-out-alt me-2"></i>Выйти
                                 </button>
                             </form>
                         </div>
@@ -50,10 +53,10 @@
                         
                         <div class="dropdown-menu dropdown-menu-end rounded-0">
                             <a class="dropdown-item text-dark" href="{{ route('login') }}">
-                                <i class="me-2"></i>Войти
+                                <i class="fas fa-sign-in-alt me-2"></i>Войти
                             </a>
                             <a class="dropdown-item text-dark" href="{{ route('register') }}">
-                                <i class="me-2"></i>Регистрация
+                                <i class="fas fa-user-plus me-2"></i>Регистрация
                             </a>
                         </div>
                     @endauth

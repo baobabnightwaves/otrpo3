@@ -15,6 +15,7 @@
         "intervention/image": "^2.7",
         "laravel/breeze": "1.9.2",
         "laravel/framework": "^8.0",
+        "laravel/passport": "10.4",
         "laravel/tinker": "^2.0"
     },
     "require-dev": {
@@ -27,7 +28,10 @@
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "audit": {
+            "ignore": ["[PKSA-2kqm-ps5x-s4f5]"]
+        }
     },
     "extra": {
         "laravel": {
